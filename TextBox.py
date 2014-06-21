@@ -13,6 +13,7 @@ GREEN = pyglet.image.SolidColorImagePattern((0, 82, 0, 255))
 class TextBox(pyglet.sprite.Sprite):
     corners = pyglet.image.load("./resources/corners.png")
     corners_seq = pyglet.image.ImageGrid(corners, 2, 2)
+
     def __init__(self, w, h, x=0, y=0, color=BLUE, batch=None):
         clamped_w = w if w > 16 else 16
         clamped_h = h if h > 16 else 16
@@ -34,7 +35,8 @@ class TextBox(pyglet.sprite.Sprite):
 
 if __name__ == "__main__":
     window = pyglet.window.Window()
-    textbox = TextBox(104, 80)
+    textbox = TextBox(88, 64, 88, 128)
+
     @window.event
     def on_draw():
         window.clear()
