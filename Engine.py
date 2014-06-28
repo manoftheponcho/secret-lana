@@ -4,6 +4,7 @@ import pyglet
 
 
 class Engine:
+
     def __init__(self, window):
         self.respond_rate = 1
         self.window = window

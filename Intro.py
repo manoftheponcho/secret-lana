@@ -5,7 +5,6 @@ import pyglet
 class SceneIntro:
 
     class FadeInLabel(pyglet.text.Label):
-
         def __init__(
                 self, text='', font_name=None, font_size=8,
                 bold=False, italic=False, color=(255, 255, 255, 255),

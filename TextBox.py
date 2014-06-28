@@ -8,7 +8,7 @@ PURPLE = pyglet.image.SolidColorImagePattern((92, 0, 126, 255))
 WHITE = pyglet.image.SolidColorImagePattern((255, 255, 255, 255))
 BLACK = pyglet.image.SolidColorImagePattern((0, 0, 0, 0))
 GREEN = pyglet.image.SolidColorImagePattern((0, 82, 0, 255))
-
+RED = pyglet.image.SolidColorImagePattern((181, 49, 32, 255))
 
 class TextBox(pyglet.sprite.Sprite):
     corners = pyglet.image.load("./resources/corners.png")
