@@ -65,10 +65,12 @@ class SceneIntro:
         self.engine.push_handlers(on_draw=self.on_draw)
 
     def on_draw(self):
-        bg = pyglet.image.SolidColorImagePattern((0, 0, 255, 255))
-        bg_image = bg.create_image(self.engine.window.width,
-                                   self.engine.window.height)
-        bg_image.blit(0, 0)
+        #TODO: find a new way to create a single-colored background
+#        because this one doesn't work
+#        bg = pyglet.image.SolidColorImagePattern((0, 0, 255, 255))
+#        bg_image = bg.create_image(self.engine.window.width,
+#                                   self.engine.window.height)
+#        bg_image.blit(0, 0)
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED
