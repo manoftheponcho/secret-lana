@@ -46,7 +46,7 @@ class SceneNameSelect:
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.LEFT:
-            self.cursor.x = 176 if self.cursor.x ==32 else self.cursor.x - 16
+            self.cursor.x = 176 if self.cursor.x == 32 else self.cursor.x - 16
         elif symbol == pyglet.window.key.RIGHT:
             self.cursor.x = 32 if self.cursor.x == 176 else self.cursor.x + 16
         if symbol == pyglet.window.key.DOWN:
@@ -55,11 +55,14 @@ class SceneNameSelect:
             self.cursor.y = 63 if self.cursor.y == 143 else self.cursor.y + 16
         if symbol == pyglet.window.key.ENTER:
             if len(self.name) >= 4:
-                self.engine.window.on_close()
+                self.engine.pop_handlers()
             else:
                 self.name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
         elif symbol == pyglet.window.key.LSHIFT:
-            self.name = self.name[:-1]
+            if len(self.name) <= 0:
+                self.engine.pop_handlers()
+            else:
+                self.name = self.name[:-1]
 
 if __name__ == "__main__":
     from Engine import Engine, View

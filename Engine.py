@@ -16,7 +16,6 @@ class Engine:
     def pop_handlers(self):
         self.window.pop_handlers()
 
-
 class View(pyglet.window.Window):
     def __init__(self):
         super().__init__(256, 240)

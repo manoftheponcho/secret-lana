@@ -62,11 +62,12 @@ class SceneIntro:
                        SceneIntro.FadeInLabel('each holding an ORB.',
                                               x=128, anchor_x='center',
                                               y=24, anchor_y='top', delay=11)]
-        self.engine.push_handlers(on_draw=self.on_draw)
+        self.engine.push_handlers(on_draw=self.on_draw,
+                                  on_key_press=self.on_key_press)
 
     def on_draw(self):
         #TODO: find a new way to create a single-colored background
-#        because this one doesn't work
+#        because this one doesn't work anymore
 #        bg = pyglet.image.SolidColorImagePattern((0, 0, 255, 255))
 #        bg_image = bg.create_image(self.engine.window.width,
 #                                   self.engine.window.height)
@@ -74,6 +75,10 @@ class SceneIntro:
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED
+
+    def on_key_press(self, symbol, modifiers):
+        if symbol == pyglet.window.key.ENTER:
+            self.engine.pop_handlers()
 
 if __name__ == "__main__":
     from Engine import Engine, View
