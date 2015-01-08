@@ -8,18 +8,18 @@ from NewGame import SceneNewGame
 class SceneMain:
     def __init__(self, engine):
         self.engine = engine
-        self.engine.scenes.append(SceneIntro(self.engine))
+        self.scene_order = [SceneIntro, SceneNewGame]
+        self.engine.push_handlers(on_draw=self.on_draw)
+        self.engine.scenes.append(self.scene_order.pop(0)(self.engine))
+
+    def on_draw(self):
+        if len(self.scene_order) > 0:
+            self.engine.scenes.append(self.scene_order.pop(0)(self.engine))
+        else:
+            self.on_close()
 
 if __name__ == "__main__":
     view = View()
     engine = Engine(view)
-    engine.scenes.append(SceneIntro(engine))
-    def transition(symbol, modifiers):
-        if symbol == pyglet.window.key.ENTER:
-            engine.pop_handlers()
-            engine.pop_handlers()
-            engine.scenes.pop()
-            engine.scenes.append(SceneNewGame(engine))
-            engine.push_handlers(on_key_press=transition)
-    engine.push_handlers(on_key_press=transition)
+    engine.scenes.append(SceneMain(engine))
     pyglet.app.run()

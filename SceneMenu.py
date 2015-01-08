@@ -1,7 +1,7 @@
 __author__ = 'DUDE'
 
 import pyglet
-from Keys import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B, SELECT, START
+from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B, SELECT, START
 from TextBox import TextBox
 from SceneItem import SceneItem
 from SceneMagic import SceneMagic
@@ -12,38 +12,38 @@ from SceneStatus import SceneStatus
 class SceneMenu:
     def __init__(self, engine):
         self.engine = engine
+        self.fixed = pyglet.graphics.Batch()
+        self.bg = pyglet.graphics.OrderedGroup(0)
+        self.text = pyglet.graphics.OrderedGroup(1)
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=16, y=79)
-        self.textboxes = [TextBox( 64, 64, 16,160),
-                          TextBox( 80, 40,  8,120),
-                          TextBox( 64,112, 16,  8),
-                          TextBox( 80,112, 88,  8),
-                          TextBox( 80,112, 88,120),
-                          TextBox( 80,112,168,  8),
-                          TextBox( 80,112,168,120)]
-        self.labels = [pyglet.text.Label('ITEM',   x=32, y=88, font_size=8),
-                       pyglet.text.Label('MAGIC',  x=32, y=72, font_size=8),
-                       pyglet.text.Label('WEAPON', x=32, y=56, font_size=8),
-                       pyglet.text.Label('ARMOR',  x=32, y=40, font_size=8),
-                       pyglet.text.Label('STATUS', x=32, y=24, font_size=8),
-                       pyglet.text.Label('G', x=72, y=136, font_size=8),
-                       pyglet.text.Label('L', x=96, y=192, font_size=8),
-                       pyglet.text.Label('L', x=176, y=192, font_size=8),
-                       pyglet.text.Label('L', x=96, y=80, font_size=8),
-                       pyglet.text.Label('L', x=176, y=80, font_size=8),
-                       pyglet.text.Label('HP', x=96, y=176, font_size=8),
-                       pyglet.text.Label('HP', x=176, y=176, font_size=8),
-                       pyglet.text.Label('HP', x=96, y=64, font_size=8),
-                       pyglet.text.Label('HP', x=176, y=64, font_size=8)]
+        self.objects = [TextBox( 64, 64, 16,160, batch=self.fixed, group=self.bg),
+                          TextBox( 80, 40,  8,120, batch=self.fixed, group=self.bg),
+                          TextBox( 64,112, 16,  8, batch=self.fixed, group=self.bg),
+                          TextBox( 80,112, 88,  8, batch=self.fixed, group=self.bg),
+                          TextBox( 80,112, 88,120, batch=self.fixed, group=self.bg),
+                          TextBox( 80,112,168,  8, batch=self.fixed, group=self.bg),
+                          TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
+        self.labels = [pyglet.text.Label('ITEM',   x=32, y=88, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('MAGIC',  x=32, y=72, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('WEAPON', x=32, y=56, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('ARMOR',  x=32, y=40, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('STATUS', x=32, y=24, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('G', x=72, y=136, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('L', x=96, y=192, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('L', x=176, y=192, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('L', x=96, y=80, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('L', x=176, y=80, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('HP', x=96, y=176, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('HP', x=176, y=176, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('HP', x=96, y=64, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('HP', x=176, y=64, font_size=8, batch=self.fixed, group=self.text)]
         self.engine.push_handlers(on_draw=self.on_draw,
                                   on_key_press=self.menu_select)
 
     def on_draw(self):
         self.engine.window.clear()
-        for box in self.textboxes:
-            box.draw()
-        for label in self.labels:
-            label.draw()
+        self.fixed.draw()
         self.cursor.draw()
         return pyglet.event.EVENT_HANDLED
 

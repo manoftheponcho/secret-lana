@@ -29,6 +29,7 @@ class SceneIntro:
 
     def __init__(self, engine):
         self.engine = engine
+        pyglet.gl.glClearColor(0,0,1,1)
         self.labels = [SceneIntro.FadeInLabel('The world is veiled in darkness.',
                                               x=128, anchor_x='center',
                                               y=216, anchor_y='top'),
@@ -66,19 +67,15 @@ class SceneIntro:
                                   on_key_press=self.on_key_press)
 
     def on_draw(self):
-        #TODO: find a new way to create a single-colored background
-#        because this one doesn't work anymore
-#        bg = pyglet.image.SolidColorImagePattern((0, 0, 255, 255))
-#        bg_image = bg.create_image(self.engine.window.width,
-#                                   self.engine.window.height)
-#        bg_image.blit(0, 0)
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == pyglet.window.key.ENTER:
-            self.engine.pop_handlers()
+        self.engine.scenes.pop()
+        self.engine.pop_handlers()
+        if symbol != pyglet.window.key.ESCAPE:
+            return pyglet.event.EVENT_HANDLED
 
 if __name__ == "__main__":
     from Engine import Engine, View

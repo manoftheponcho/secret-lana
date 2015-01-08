@@ -14,7 +14,7 @@ class TextBox(pyglet.sprite.Sprite):
     corners = pyglet.image.load("./resources/corners.png")
     corners_seq = pyglet.image.ImageGrid(corners, 2, 2)
 
-    def __init__(self, w, h, x=0, y=0, color=BLUE, batch=None):
+    def __init__(self, w, h, x=0, y=0, color=BLUE, batch=None, group=None):
         clamped_w = w if w > 16 else 16
         clamped_h = h if h > 16 else 16
         img = pyglet.image.Texture.create(clamped_w, clamped_h)
@@ -31,7 +31,7 @@ class TextBox(pyglet.sprite.Sprite):
             block_color = pyglet.image.SolidColorImagePattern(color)
             block = block_color.create_image(clamped_w - 10, clamped_h - 12)
         img.blit_into(block, 5, 5, 0)
-        super().__init__(img, x, y, batch=batch)
+        super().__init__(img, x, y, batch=batch, group=group)
 
 if __name__ == "__main__":
     window = pyglet.window.Window()

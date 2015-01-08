@@ -9,6 +9,7 @@ class SceneNewGame:
     def __init__(self, engine):
         self.engine = engine
         cursor_image = pyglet.image.load('./resources/cursor.png')
+        pyglet.gl.glClearColor(0,0,0,1)
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=72, y=135)
         self.textboxes = [TextBox(80, 32, 88, 128),
                           TextBox(80, 32, 88, 88),

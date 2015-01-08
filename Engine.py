@@ -3,12 +3,90 @@ __author__ = 'Bernadette'
 import pyglet
 
 
+class LightWarrior:
+    images = pyglet.image.load('./resources/heroes.png')
+    def __init__(self):
+        self.name = ''
+
+class Fighter(LightWarrior):
+    job_name = 'FIGHTER'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(0, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
+class Thief(LightWarrior):
+    job_name = 'THIEF'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(16, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
+class BlackBelt(LightWarrior):
+    job_name = 'Bl.BELT'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(32, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
+class RedMage(LightWarrior):
+    job_name = 'RedMAGE'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(48, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
+class WhiteMage(LightWarrior):
+    job_name = 'Wh.MAGE'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(64, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
+class BlackMage(LightWarrior):
+    job_name = 'Bl.MAGE'
+
+    def __init__(self):
+        super().__init__()
+        self.image = self.images.get_region(80, 0, 16, 24)
+        self.sprite = pyglet.sprite.Sprite(self.image)
+
+    def draw(self):
+        self.sprite.draw()
+
+
 class Engine:
 
     def __init__(self, window):
         self.respond_rate = 1
         self.window = window
         self.scenes = []
+        self.heroes = [Fighter(), Thief(), BlackBelt(), RedMage()]
 
     def push_handlers(self, *args, **kwargs):
         self.window.push_handlers(*args, **kwargs)

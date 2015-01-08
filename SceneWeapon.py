@@ -8,29 +8,30 @@ class SceneWeapon:
         self.engine = engine
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=16, y=79)
-        self.textboxes = [TextBox(184, 48, 64,  8),
-                          TextBox(184, 48, 64, 56),
-                          TextBox(184, 48, 64,104),
-                          TextBox(184, 48, 64,152),
-                          TextBox(184, 32, 64,200),
-                          TextBox( 64, 32,  8, 24),
-                          TextBox( 64, 32,  8, 72),
-                          TextBox( 64, 32,  8,120),
-                          TextBox( 64, 32,  8,168),
-                          TextBox( 56, 32,  8,200)]
-        self.labels = [pyglet.text.Label('WEAPON',   x=16, y=208, font_size=8),
-                       pyglet.text.Label('EQUIP', x=88, y=208, font_size=8),
-                       pyglet.text.Label('TRADE', x=144, y=208, font_size=8),
-                       pyglet.text.Label('DROP', x=200, y=208, font_size=8)]
+        self.fixed = pyglet.graphics.Batch()
+        bg = pyglet.graphics.OrderedGroup(0)
+        fg = pyglet.graphics.OrderedGroup(1)
+        text = pyglet.graphics.OrderedGroup(2)
+        self.objects = [TextBox(184, 48, 64,  8, batch=self.fixed, group=bg),
+                        TextBox(184, 48, 64, 56, batch=self.fixed, group=bg),
+                        TextBox(184, 48, 64,104, batch=self.fixed, group=bg),
+                        TextBox(184, 48, 64,152, batch=self.fixed, group=bg),
+                        TextBox(184, 32, 64,200, batch=self.fixed, group=bg),
+                        TextBox( 64, 32,  8, 24, batch=self.fixed, group=fg),
+                        TextBox( 64, 32,  8, 72, batch=self.fixed, group=fg),
+                        TextBox( 64, 32,  8,120, batch=self.fixed, group=fg),
+                        TextBox( 64, 32,  8,168, batch=self.fixed, group=fg),
+                        TextBox( 56, 32,  8,200, batch=self.fixed, group=fg),
+                        pyglet.text.Label('WEAPON', x=16, y=208, font_size=8, batch=self.fixed, group=text),
+                        pyglet.text.Label('EQUIP',  x=88, y=208, font_size=8, batch=self.fixed, group=text),
+                        pyglet.text.Label('TRADE', x=144, y=208, font_size=8, batch=self.fixed, group=text),
+                        pyglet.text.Label('DROP',  x=200, y=208, font_size=8, batch=self.fixed, group=text)]
         self.engine.push_handlers(on_draw=self.on_draw,
                                   on_key_press=self.on_key_press)
 
     def on_draw(self):
         self.engine.window.clear()
-        for box in self.textboxes:
-            box.draw()
-        for label in self.labels:
-            label.draw()
+        self.fixed.draw()
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):

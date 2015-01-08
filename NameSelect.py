@@ -2,12 +2,12 @@ __author__ = 'Bernadette'
 
 import pyglet
 from TextBox import TextBox, RED
-
+from Config import UP, DOWN, LEFT, RIGHT, SELECT, START, BUTTON_A, BUTTON_B
 
 class SceneNameSelect:
-    def __init__(self, engine):
+    def __init__(self, engine, index):
         self.engine = engine
-        self.name = ''
+        self.name = self.engine.heroes[index].name
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.title = pyglet.text.Label('SELECT  NAME', x=72, y=24, font_size=8)
         self.name_box = TextBox(48, 32, 104, 192, RED)
@@ -45,28 +45,30 @@ class SceneNameSelect:
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == pyglet.window.key.LEFT:
+        if symbol == LEFT:
             self.cursor.x = 176 if self.cursor.x == 32 else self.cursor.x - 16
-        elif symbol == pyglet.window.key.RIGHT:
+        elif symbol == RIGHT:
             self.cursor.x = 32 if self.cursor.x == 176 else self.cursor.x + 16
-        if symbol == pyglet.window.key.DOWN:
+        if symbol == DOWN:
             self.cursor.y = 143 if self.cursor.y == 63 else self.cursor.y - 16
-        elif symbol == pyglet.window.key.UP:
+        elif symbol == UP:
             self.cursor.y = 63 if self.cursor.y == 143 else self.cursor.y + 16
-        if symbol == pyglet.window.key.ENTER:
+        if symbol == BUTTON_A:
             if len(self.name) >= 4:
                 self.engine.pop_handlers()
             else:
                 self.name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
-        elif symbol == pyglet.window.key.LSHIFT:
+        elif symbol == BUTTON_B:
             if len(self.name) <= 0:
                 self.engine.pop_handlers()
             else:
                 self.name = self.name[:-1]
+        if symbol != pyglet.window.key.ESCAPE:
+            return pyglet.event.EVENT_HANDLED
 
 if __name__ == "__main__":
     from Engine import Engine, View
     view = View()
     engine = Engine(view)
-    engine.scenes.append(SceneNameSelect(engine))
+    engine.scenes.append(SceneNameSelect(engine, 0))
     pyglet.app.run()
