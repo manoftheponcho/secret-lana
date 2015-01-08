@@ -7,7 +7,7 @@ from Config import UP, DOWN, LEFT, RIGHT, SELECT, START, BUTTON_A, BUTTON_B
 class SceneNameSelect:
     def __init__(self, engine, index):
         self.engine = engine
-        self.name = self.engine.heroes[index].name
+        self.index = index
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.title = pyglet.text.Label('SELECT  NAME', x=72, y=24, font_size=8)
         self.name_box = TextBox(48, 32, 104, 192, RED)
@@ -36,7 +36,7 @@ class SceneNameSelect:
     def on_draw(self):
         self.engine.window.clear()
         self.name_box.draw()
-        pyglet.text.Label(self.name, x=112, y=200, font_size=8).draw()
+        pyglet.text.Label(self.engine.heroes[self.index].name, x=112, y=200, font_size=8).draw()
         self.char_box.draw()
         self.title.draw()
         for label in self.labels:
@@ -54,15 +54,15 @@ class SceneNameSelect:
         elif symbol == UP:
             self.cursor.y = 63 if self.cursor.y == 143 else self.cursor.y + 16
         if symbol == BUTTON_A:
-            if len(self.name) >= 4:
+            if len(self.engine.heroes[self.index].name) >= 4:
                 self.engine.pop_handlers()
             else:
-                self.name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
+                self.engine.heroes[self.index].name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
         elif symbol == BUTTON_B:
-            if len(self.name) <= 0:
+            if len(self.engine.heroes[self.index].name) <= 0:
                 self.engine.pop_handlers()
             else:
-                self.name = self.name[:-1]
+                self.engine.heroes[self.index].name = self.engine.heroes[self.index].name[:-1]
         if symbol != pyglet.window.key.ESCAPE:
             return pyglet.event.EVENT_HANDLED
 
