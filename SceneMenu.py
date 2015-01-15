@@ -17,6 +17,10 @@ class SceneMenu:
         self.text = pyglet.graphics.OrderedGroup(1)
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=16, y=79)
+        self.engine.heroes[0].sprite.x, self.engine.heroes[0].sprite.y = (136, 191)
+        self.engine.heroes[1].sprite.x, self.engine.heroes[1].sprite.y = (216, 191)
+        self.engine.heroes[2].sprite.x, self.engine.heroes[2].sprite.y = (136,  79)
+        self.engine.heroes[3].sprite.x, self.engine.heroes[3].sprite.y = (216,  79)
         self.objects = [TextBox( 64, 64, 16,160, batch=self.fixed, group=self.bg),
                           TextBox( 80, 40,  8,120, batch=self.fixed, group=self.bg),
                           TextBox( 64,112, 16,  8, batch=self.fixed, group=self.bg),
@@ -24,12 +28,31 @@ class SceneMenu:
                           TextBox( 80,112, 88,120, batch=self.fixed, group=self.bg),
                           TextBox( 80,112,168,  8, batch=self.fixed, group=self.bg),
                           TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
-        self.labels = [pyglet.text.Label('ITEM',   x=32, y=88, font_size=8, batch=self.fixed, group=self.text),
+        HP_FORMAT = '{:3}/{:3}'
+        GOLD_FORMAT = '{:6} G'
+        self.labels = [pyglet.text.Label(self.engine.heroes[0].name,
+                                         x=96,  y=208, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(self.engine.heroes[1].name,
+                                         x=176, y=208, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(self.engine.heroes[2].name,
+                                         x=96,  y=96,  font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(self.engine.heroes[3].name,
+                                         x=176, y=96,  font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(HP_FORMAT.format(self.engine.heroes[0].hp, self.engine.heroes[0].max_hp),
+                                         x=96,  y=168, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(HP_FORMAT.format(self.engine.heroes[1].hp, self.engine.heroes[1].max_hp),
+                                         x=176, y=168, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(HP_FORMAT.format(self.engine.heroes[2].hp, self.engine.heroes[2].max_hp),
+                                         x=96,  y=56,  font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(HP_FORMAT.format(self.engine.heroes[3].hp, self.engine.heroes[3].max_hp),
+                                         x=176, y=56,  font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(GOLD_FORMAT.format(self.engine.gold),
+                                         x=16,  y=136, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label('ITEM',   x=32, y=88, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('MAGIC',  x=32, y=72, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('WEAPON', x=32, y=56, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('ARMOR',  x=32, y=40, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('STATUS', x=32, y=24, font_size=8, batch=self.fixed, group=self.text),
-                       pyglet.text.Label('G', x=72, y=136, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('L', x=96, y=192, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('L', x=176, y=192, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('L', x=96, y=80, font_size=8, batch=self.fixed, group=self.text),
@@ -44,6 +67,8 @@ class SceneMenu:
     def on_draw(self):
         self.engine.window.clear()
         self.fixed.draw()
+        for hero in self.engine.heroes:
+            hero.draw()
         self.cursor.draw()
         return pyglet.event.EVENT_HANDLED
 
@@ -54,14 +79,14 @@ class SceneMenu:
             self.cursor.y = 79 if self.cursor.y == 15 else self.cursor.y - 16
         elif symbol in BUTTON_A:
             if self.cursor.y == 79:#ITEM
-                self.engine.scenes.append(SceneItem(engine))
+                self.engine.scenes.append(SceneItem(self.engine))
             elif self.cursor.y == 63:#MAGIC
                 self.cursor.x, self.cursor.y = (72, 209)
                 self.engine.push_handlers(on_key_press=self.magic_select)
             elif self.cursor.y == 47:#WEAPON
-                self.engine.scenes.append(SceneWeapon(engine))
+                self.engine.scenes.append(SceneWeapon(self.engine))
             elif self.cursor.y == 31:#ARMOR
-                self.engine.scenes.append(SceneArmor(engine))
+                self.engine.scenes.append(SceneArmor(self.engine))
             elif self.cursor.y == 15:#STATUS
                 self.cursor.x, self.cursor.y = (72, 209)
                 self.engine.push_handlers(on_key_press=self.status_select)
@@ -80,7 +105,7 @@ class SceneMenu:
         elif symbol in BUTTON_A:
             #map cursor location to hero array index
             index = {(72,209):0, (152,209):1, (72,95):2, (152,95):3}[(self.cursor.x, self.cursor.y)]
-            self.engine.scenes.append(SceneMagic(engine, index))
+            self.engine.scenes.append(SceneMagic(self.engine, index))
         elif symbol in BUTTON_B:
             self.cursor.x, self.cursor.y = (16,63)
             self.engine.pop_handlers()
@@ -97,7 +122,7 @@ class SceneMenu:
         elif symbol in BUTTON_A:
             #map cursor location to hero array index
             index = {(72,209):0, (152,209):1, (72,95):2, (152,95):3}[(self.cursor.x, self.cursor.y)]
-            self.engine.scenes.append(SceneStatus(engine, index))
+            self.engine.scenes.append(SceneStatus(self.engine, index))
         elif symbol in BUTTON_B:
             self.cursor.x, self.cursor.y = (16,15)
             self.engine.pop_handlers()
@@ -106,8 +131,9 @@ class SceneMenu:
 
 
 if __name__ == "__main__":
-    from Engine import Engine, View
+    from Engine import Engine, View, Fighter, Thief, BlackBelt, RedMage
     view = View()
     engine = Engine(view)
+    engine.heroes = [Fighter(), Thief(), BlackBelt(), RedMage()]
     engine.scenes.append(SceneMenu(engine))
     pyglet.app.run()

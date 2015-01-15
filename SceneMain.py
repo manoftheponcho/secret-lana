@@ -2,14 +2,15 @@ __author__ = 'DUDE'
 
 import pyglet
 from Engine import Engine, View
-from Intro import SceneIntro
-from NewGame import SceneNewGame
-from JobSelect import SceneJobSelect
+from SceneIntro import SceneIntro
+from SceneNewGame import SceneNewGame
+from SceneJobSelect import SceneJobSelect
+from SceneMenu import SceneMenu
 
 class SceneMain:
     def __init__(self, engine):
         self.engine = engine
-        self.scene_order = [SceneIntro, SceneNewGame, SceneJobSelect]
+        self.scene_order = [SceneIntro, SceneNewGame, SceneJobSelect, SceneMenu]
         self.engine.push_handlers(on_draw=self.on_draw)
         self.engine.scenes.append(self.scene_order.pop(0)(self.engine))
 

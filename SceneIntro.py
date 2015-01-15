@@ -2,6 +2,7 @@ __author__ = 'Bernadette'
 
 import pyglet
 
+
 class SceneIntro:
 
     class FadeInLabel(pyglet.text.Label):
@@ -29,7 +30,7 @@ class SceneIntro:
 
     def __init__(self, engine):
         self.engine = engine
-        pyglet.gl.glClearColor(0,0,1,1)
+        pyglet.gl.glClearColor(0, 0, 1, 1)
         self.labels = [SceneIntro.FadeInLabel('The world is veiled in darkness.',
                                               x=128, anchor_x='center',
                                               y=216, anchor_y='top'),
@@ -67,6 +68,7 @@ class SceneIntro:
                                   on_key_press=self.on_key_press)
 
     def on_draw(self):
+        pyglet.gl.glClear(0)
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED

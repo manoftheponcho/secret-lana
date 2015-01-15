@@ -5,14 +5,18 @@ import pyglet
 
 class LightWarrior:
     images = pyglet.image.load('./resources/heroes.png')
+
     def __init__(self):
         self.name = ''
+        self.level = 1
+
 
 class Fighter(LightWarrior):
     job_name = 'FIGHTER'
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 35
         self.image = self.images.get_region(0, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -25,6 +29,7 @@ class Thief(LightWarrior):
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 30
         self.image = self.images.get_region(16, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -37,6 +42,7 @@ class BlackBelt(LightWarrior):
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 33
         self.image = self.images.get_region(32, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -49,6 +55,7 @@ class RedMage(LightWarrior):
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 30
         self.image = self.images.get_region(48, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -61,6 +68,7 @@ class WhiteMage(LightWarrior):
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 28
         self.image = self.images.get_region(64, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -73,6 +81,7 @@ class BlackMage(LightWarrior):
 
     def __init__(self):
         super().__init__()
+        self.max_hp = self.hp = 25
         self.image = self.images.get_region(80, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
 
@@ -83,16 +92,18 @@ class BlackMage(LightWarrior):
 class Engine:
 
     def __init__(self, window):
-        self.respond_rate = 1
         self.window = window
         self.scenes = []
+        self.respond_rate = 1
         self.heroes = [Fighter(), Thief(), BlackBelt(), RedMage()]
+        self.gold = 400
 
     def push_handlers(self, *args, **kwargs):
         self.window.push_handlers(*args, **kwargs)
 
     def pop_handlers(self):
         self.window.pop_handlers()
+
 
 class View(pyglet.window.Window):
     def __init__(self):
