@@ -14,6 +14,7 @@ class Map:
         self.image = None
         self.tiles = {}
 
+
     def on_draw(self):
         self.image.blit(self.x, self.y)
 
@@ -23,7 +24,6 @@ class Map:
         else:
             self.x, self.y = (self.x + dx, self.y + dy)
             return True
-
 
 class World(Map):
 
@@ -41,30 +41,34 @@ class SceneMap:
         hero_image = pyglet.image.ImageDataRegion(0, 0, 16, 16, hero_images)
         self.hero_sprite = pyglet.sprite.Sprite(hero_image)
         self.hero_sprite.x, self.hero_sprite.y = (112, 120)
-        self.map_stack = [World(self)]
+        self.map = pyglet.image.load('./resources/overworld.png')
+        self.x, self.y = (-2336, -1304)
+        self.tiles = {}
         self.engine.push_handlers(on_draw=self.on_draw,
                                   on_key_press=self.on_key_press)
 
     def on_draw(self):
         pyglet.gl.glClear(0)
         self.engine.window.clear()
-        self.map_stack[-1].on_draw()
+        self.map.blit(self.x, self.y)
         self.hero_sprite.draw()
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.LEFT:
-            if self.map_stack[-1].on_walk(16, 0):
-                pass
+            self.on_walk(16, 0)
         elif symbol == pyglet.window.key.RIGHT:
-            if self.map_stack[-1].on_walk(-16, 0):
-                pass
+            self.on_walk(-16, 0)
         if symbol == pyglet.window.key.UP:
-            if self.map_stack[-1].on_walk(0, -16):
-                pass
+            self.on_walk(0, -16)
         elif symbol == pyglet.window.key.DOWN:
-            if self.map_stack[-1].on_walk(0, 16):
-                pass
+            self.on_walk(0, 16)
+
+    def on_walk(self, dx, dy):
+        if (self.x + dx, self.y + dy) in self.tiles:
+            self.tiles[self.x + dx, self.y + dy].on_walk()
+        else:
+            self.x, self.y = self.x + dx, self.y + dy
 
 if __name__ == "__main__":
     from Engine import View, Engine
