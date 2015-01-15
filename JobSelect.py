@@ -50,16 +50,22 @@ class SceneJobSelect:
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
-        if symbol in [UP, DOWN, LEFT, RIGHT]:
-            self.engine.heroes[self.index] = self.cycle[type(self.engine.heroes[self.index])]()
-            self.engine.heroes[self.index].sprite.x = self.cursor.x + 15
-            self.engine.heroes[self.index].sprite.y = self.cursor.y - 8
-        elif symbol == BUTTON_A:
-            self.index = min(4, self.index+1)
-            self.engine.scenes.append(SceneNameSelect(self.engine, self.index-1))
-        elif symbol == BUTTON_B:
+        if symbol in BUTTON_B:
             self.index = max(0, self.index-1)
-        if symbol != pyglet.window.key.ESCAPE:
+        if self.index < 4:
+            if symbol in UP + DOWN + LEFT + RIGHT:
+                self.engine.heroes[self.index] = self.cycle[type(self.engine.heroes[self.index])]()
+                self.engine.heroes[self.index].sprite.x = self.cursor.x + 15
+                self.engine.heroes[self.index].sprite.y = self.cursor.y - 8
+            elif symbol in BUTTON_A:
+                self.index = min(4, self.index+1)
+                self.engine.scenes.append(SceneNameSelect(self.engine, self.index-1))
+        else:
+            if symbol in BUTTON_A:
+                self.engine.scenes.pop()
+                self.engine.pop_handlers()
+
+        if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
             return pyglet.event.EVENT_HANDLED
 
 if __name__ == "__main__":

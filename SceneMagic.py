@@ -26,7 +26,7 @@ class SceneMagic:
         self.engine.scenes.pop()
         self.engine.pop_handlers()
         if symbol != pyglet.window.key.ESCAPE:
-            return pyglet.event.EVENT_HANDLED
+            return pyglet.event.EVENT_HANDLED  # the only keyboard event we want propagating up the stack
 
 if __name__ == "__main__":
     from Engine import Engine, View

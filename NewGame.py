@@ -3,7 +3,7 @@ __author__ = 'Bernadette'
 import pyglet
 
 from TextBox import TextBox, BLUE
-
+from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B, SELECT, START
 
 class SceneNewGame:
     def __init__(self, engine):
@@ -36,13 +36,18 @@ class SceneNewGame:
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
-        if (symbol == pyglet.window.key.UP
-                or symbol == pyglet.window.key.DOWN):
+        if (symbol in UP or symbol in DOWN):
             self.cursor.y = 135 if self.cursor.y == 95 else 95
-        elif symbol == pyglet.window.key.LEFT:
+        elif symbol in LEFT:
             self.engine.respond_rate = 8 if self.engine.respond_rate == 1 else self.engine.respond_rate - 1
-        elif symbol == pyglet.window.key.RIGHT:
+        elif symbol in RIGHT:
             self.engine.respond_rate = 1 if self.engine.respond_rate == 8 else self.engine.respond_rate + 1
+        elif symbol in BUTTON_A:
+            self.engine.scenes.pop()
+            self.engine.pop_handlers()
+        if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
+            return pyglet.event.EVENT_HANDLED
+
 
 if __name__ == "__main__":
     from Engine import Engine, View

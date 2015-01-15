@@ -38,7 +38,7 @@ class SceneStatus:
     def on_key_press(self, symbol, modifiers):
         self.engine.scenes.pop()
         self.engine.pop_handlers()
-        if symbol != pyglet.window.key.ESCAPE:
+        if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
             return pyglet.event.EVENT_HANDLED
 
 if __name__ == "__main__":

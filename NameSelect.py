@@ -45,25 +45,25 @@ class SceneNameSelect:
         return pyglet.event.EVENT_HANDLED
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == LEFT:
+        if symbol in LEFT:
             self.cursor.x = 176 if self.cursor.x == 32 else self.cursor.x - 16
-        elif symbol == RIGHT:
+        elif symbol in RIGHT:
             self.cursor.x = 32 if self.cursor.x == 176 else self.cursor.x + 16
-        if symbol == DOWN:
+        if symbol in DOWN:
             self.cursor.y = 143 if self.cursor.y == 63 else self.cursor.y - 16
-        elif symbol == UP:
+        elif symbol in UP:
             self.cursor.y = 63 if self.cursor.y == 143 else self.cursor.y + 16
-        if symbol == BUTTON_A:
+        if symbol in BUTTON_A:
             if len(self.engine.heroes[self.index].name) >= 4:
                 self.engine.pop_handlers()
             else:
                 self.engine.heroes[self.index].name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
-        elif symbol == BUTTON_B:
+        elif symbol in BUTTON_B:
             if len(self.engine.heroes[self.index].name) <= 0:
                 self.engine.pop_handlers()
             else:
                 self.engine.heroes[self.index].name = self.engine.heroes[self.index].name[:-1]
-        if symbol != pyglet.window.key.ESCAPE:
+        if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
             return pyglet.event.EVENT_HANDLED
 
 if __name__ == "__main__":
