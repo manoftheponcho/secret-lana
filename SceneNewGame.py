@@ -33,7 +33,7 @@ class SceneNewGame:
         self.cursor.draw()
         rr = self.engine.respond_rate
         pyglet.text.Label('{}'.format(rr), x=176, y=56).draw()
-        return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if (symbol in UP or symbol in DOWN):

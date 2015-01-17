@@ -42,7 +42,7 @@ class SceneNameSelect:
         for label in self.labels:
             label.draw()
         self.cursor.draw()
-        return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if symbol in LEFT:

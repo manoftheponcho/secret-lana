@@ -70,7 +70,7 @@ class SceneMenu:
         for hero in self.engine.heroes:
             hero.draw()
         self.cursor.draw()
-        return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def menu_select(self, symbol, modifiers):
         if symbol in UP:

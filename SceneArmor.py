@@ -32,7 +32,7 @@ class SceneArmor:
             box.draw()
         for label in self.labels:
             label.draw()
-        return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         self.engine.scenes.pop()

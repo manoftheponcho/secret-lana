@@ -5,6 +5,7 @@ import pyglet
 
 class LightWarrior:
     images = pyglet.image.load('./resources/heroes.png')
+    map_sprites = pyglet.image.load('./resources/mapheroes.png')
 
     def __init__(self):
         self.name = ''
@@ -19,6 +20,7 @@ class Fighter(LightWarrior):
         self.max_hp = self.hp = 35
         self.image = self.images.get_region(0, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(0, 32, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -32,6 +34,7 @@ class Thief(LightWarrior):
         self.max_hp = self.hp = 30
         self.image = self.images.get_region(16, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(32, 32, 16, 16))
 
     def draw(self):
         self.sprite.draw()

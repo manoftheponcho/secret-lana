@@ -47,7 +47,7 @@ class SceneJobSelect:
         if self.index != 4:
             self.cursor.x, self.cursor.y = self.index_map[self.index]
             self.cursor.draw()
-        return pyglet.event.EVENT_HANDLED
+        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if symbol in BUTTON_B:
