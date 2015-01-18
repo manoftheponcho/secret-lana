@@ -56,11 +56,13 @@ class SceneNameSelect:
         if symbol in BUTTON_A:
             if len(self.engine.heroes[self.index].name) >= 4:
                 self.engine.pop_handlers()
+                self.engine.scenes.remove(self)
             else:
                 self.engine.heroes[self.index].name += self.chars[(self.cursor.x + 16, self.cursor.y + 9)]
         elif symbol in BUTTON_B:
             if len(self.engine.heroes[self.index].name) <= 0:
                 self.engine.pop_handlers()
+                self.engine.scenes.remove(self)
             else:
                 self.engine.heroes[self.index].name = self.engine.heroes[self.index].name[:-1]
         if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack

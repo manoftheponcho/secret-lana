@@ -33,6 +33,8 @@ class SceneJobSelect:
 
     def on_draw(self):
         self.engine.window.clear()
+        if self.index > 0 and self.engine.heroes[self.index-1].name == '':
+            self.index -= 1  # only place we can put a sanity check on SceneNameSelect's consequences
         self.fixed.draw()
         for hero in self.engine.heroes:
             hero.draw()
@@ -47,7 +49,7 @@ class SceneJobSelect:
         if self.index != 4:
             self.cursor.x, self.cursor.y = self.index_map[self.index]
             self.cursor.draw()
-        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
+        return pyglet.event.EVENT_HANDLED  # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if symbol in BUTTON_B:

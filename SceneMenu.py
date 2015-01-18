@@ -30,6 +30,7 @@ class SceneMenu:
                           TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
         HP_FORMAT = '{:3}/{:3}'
         GOLD_FORMAT = '{:6} G'
+        LEVEL_FORMAT = 'L{:2}'
         self.labels = [pyglet.text.Label(self.engine.heroes[0].name,
                                          x=96,  y=208, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label(self.engine.heroes[1].name,
@@ -48,15 +49,19 @@ class SceneMenu:
                                          x=176, y=56,  font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label(GOLD_FORMAT.format(self.engine.gold),
                                          x=16,  y=136, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(LEVEL_FORMAT.format(self.engine.heroes[0].level),
+                                         x=96,  y=192, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(LEVEL_FORMAT.format(self.engine.heroes[1].level),
+                                         x=176, y=192, font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(LEVEL_FORMAT.format(self.engine.heroes[2].level),
+                                         x=96,  y=80,  font_size=8, batch=self.fixed, group=self.text),
+                       pyglet.text.Label(LEVEL_FORMAT.format(self.engine.heroes[3].level),
+                                         x=176, y=80,  font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('ITEM',   x=32, y=88, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('MAGIC',  x=32, y=72, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('WEAPON', x=32, y=56, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('ARMOR',  x=32, y=40, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('STATUS', x=32, y=24, font_size=8, batch=self.fixed, group=self.text),
-                       pyglet.text.Label('L', x=96, y=192, font_size=8, batch=self.fixed, group=self.text),
-                       pyglet.text.Label('L', x=176, y=192, font_size=8, batch=self.fixed, group=self.text),
-                       pyglet.text.Label('L', x=96, y=80, font_size=8, batch=self.fixed, group=self.text),
-                       pyglet.text.Label('L', x=176, y=80, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('HP', x=96, y=176, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('HP', x=176, y=176, font_size=8, batch=self.fixed, group=self.text),
                        pyglet.text.Label('HP', x=96, y=64, font_size=8, batch=self.fixed, group=self.text),

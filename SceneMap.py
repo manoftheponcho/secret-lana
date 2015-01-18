@@ -7,6 +7,27 @@ from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B, SELECT, START
 
 
 class Map:
+    class Special(pyglet.sprite.Sprite):
+        def __init__(self):
+            super(Map.Special, self).__init__(img=pyglet.image.create(16,16))
+        def can_walk(self):
+            return True
+
+    class Warp(Special):
+        def __init__(self, target_map, target_x=None, target_y=None):
+            super(Map.Warp, self).__init__()
+            self.target_map = target_map
+            self.target_x, self.target_y = (target_x, target_y)
+
+        def on_walk(self, scene):
+            scene.engine.pop_handlers()
+            if self.target_x is not None:
+                if self.target_y is not None:
+                    scene.map = self.target_map(scene, self.target_x, self.target_y)
+                else:
+                    scene.map = self.target_map(scene, self.target_x)
+            else:
+                scene.map = self.target_map(scene)
 
     def __init__(self, scene, x=0, y=0):
         self.bg = None
@@ -23,9 +44,8 @@ class Map:
             return True
 
     def on_draw(self):
-        pyglet.gl.glClear(0)
         self.scene.engine.window.clear()
-        self.bg.blit(self.x, self.y, -1)
+        self.bg.blit(self.x, self.y)
         hero_sprite = self.scene.engine.heroes[0].map_sprite
         hero_sprite.x, hero_sprite.y = (112, 123)
         hero_sprite.draw()
@@ -61,21 +81,11 @@ class Map:
 
 class ConeriaCastle1(Map):
 
-    class Special(pyglet.sprite.Sprite):
-        def __init__(self):
-            super(ConeriaCastle1.Special, self).__init__(img=pyglet.image.create(16,16))
-        def can_walk(self):
-            return True
-
-    class Warp(Special):
-        def on_walk(self, scene):
-            scene.engine.pop_handlers()
-            scene.map = WorldMap(scene, x=-2336, y=-1400)
-
     def __init__(self, scene, x=-224, y=-16):
         super(ConeriaCastle1, self).__init__(scene, x, y)
         self.bg = pyglet.image.load('./resources/coneria.png')
-        self.specials = {(-224, 0): ConeriaCastle1.Warp(), (-224, -512): ConeriaCastle1.Warp()}
+        self.specials = {(-224, 0): Map.Warp(WorldMap, -2336, -1400),
+                         (-224, -512): Map.Warp(WorldMap, -2336, -1400)}
 
     def on_talk(self):
         def show_talkbox():
@@ -93,21 +103,10 @@ class ConeriaCastle1(Map):
 
 class WorldMap(Map):
 
-    class Special(pyglet.sprite.Sprite):
-        def __init__(self):
-            super(WorldMap.Special, self).__init__(img=pyglet.image.create(16,16))
-        def can_walk(self):
-            return True
-
-    class Warp(Special):
-        def on_walk(self, scene):
-            scene.engine.pop_handlers()
-            scene.map = ConeriaCastle1(scene)
-
     def __init__(self, scene, x=-2336, y=-1304):
         super(WorldMap, self).__init__(scene, x, y)
         self.bg = pyglet.image.load('./resources/overworld.png')
-        self.specials = {(-2336, -1400):WorldMap.Warp()}
+        self.specials = {(-2336, -1400): Map.Warp(ConeriaCastle1)}
 
 
 class SceneMap:
