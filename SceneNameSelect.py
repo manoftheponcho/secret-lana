@@ -8,6 +8,7 @@ class SceneNameSelect:
     def __init__(self, engine, index):
         self.engine = engine
         self.index = index
+        self.engine.heroes[index].name = ''
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.title = pyglet.text.Label('SELECT  NAME', x=72, y=24, font_size=8)
         self.name_box = TextBox(48, 32, 104, 192, RED)
@@ -42,7 +43,7 @@ class SceneNameSelect:
         for label in self.labels:
             label.draw()
         self.cursor.draw()
-        return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
+        return pyglet.event.EVENT_HANDLED  # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if symbol in LEFT:

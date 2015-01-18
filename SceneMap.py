@@ -12,6 +12,24 @@ class Map:
             super(Map.Special, self).__init__(img=pyglet.image.create(16,16))
         def can_walk(self):
             return True
+        def on_walk(self, scene):
+            pass
+        def on_draw(self, scene):
+            pass
+
+    class Wall(Special):
+        def can_walk(self):
+            return False
+
+    class Door(Special):
+        def __init__(self):
+            super(Map.Door, self).__init__()
+            self.image_closed = pyglet.image.load('./resources/tileset.png').get_region(144, 16, 16, 16)
+            self.image_open = pyglet.image.create(16, 16)
+            self.image = self.image_closed
+
+        def on_walk(self, scene):
+            self.image = self.image_open
 
     class Warp(Special):
         def __init__(self, target_map, target_x=None, target_y=None):
@@ -38,14 +56,16 @@ class Map:
                                         on_key_press=self.on_key_press)
 
     def can_walk(self, x, y):
-        if (x, y) in self.specials:
+        try:
             return self.specials[(x, y)].can_walk()
-        else:
+        except KeyError:
             return True
 
     def on_draw(self):
         self.scene.engine.window.clear()
         self.bg.blit(self.x, self.y)
+        for key in self.specials:
+            self.specials[key].draw()
         hero_sprite = self.scene.engine.heroes[0].map_sprite
         hero_sprite.x, hero_sprite.y = (112, 123)
         hero_sprite.draw()
@@ -70,6 +90,8 @@ class Map:
             dy = 16
         if self.can_walk(self.x + dx, self.y + dy) and (dx, dy) != (0, 0):
             self.x, self.y = self.x + dx, self.y + dy
+            for key in self.specials:
+                self.specials[key].x, self.specials[key].y = self.specials[key].x + dx, self.specials[key].y + dy
             self.on_walk()
         if symbol in BUTTON_A:
             self.on_talk()
@@ -85,12 +107,23 @@ class ConeriaCastle1(Map):
         super(ConeriaCastle1, self).__init__(scene, x, y)
         self.bg = pyglet.image.load('./resources/coneria.png')
         self.specials = {(-224, 0): Map.Warp(WorldMap, -2336, -1400),
-                         (-224, -512): Map.Warp(WorldMap, -2336, -1400)}
+                         (-224, -512): Map.Warp(WorldMap, -2336, -1400),
+                         (-320, -144): Map.Door(),
+                         (-128, -144): Map.Door()}
+        self.specials.update({(0, y): Map.Wall() for y in range(-48, -512, -16)})
+        self.specials.update({(-448, y): Map.Wall() for y in range(-48, -512, -16)})
+
+        #TODO: figure out a more intuitive way to do this, seriously
+        MAP_OFFSET = (-112, 104)
+        for key in self.specials:
+            self.specials[key].set_position(-key[0]+MAP_OFFSET[0], -key[1]+MAP_OFFSET[1])
+        self.indoors = False
 
     def on_talk(self):
         def show_talkbox():
             self.on_draw()
             TextBox(224, 88, 16, 144).draw()
+            pyglet.text.Label('Nothing here.', x=32, y=208, font_size=8).draw()
             return pyglet.event.EVENT_HANDLED
 
         def grab_input(symbol, modifiers):
@@ -100,6 +133,7 @@ class ConeriaCastle1(Map):
 
         self.scene.engine.push_handlers(on_draw=show_talkbox,
                                         on_key_press=grab_input)
+
 
 class WorldMap(Map):
 

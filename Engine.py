@@ -20,7 +20,7 @@ class Fighter(LightWarrior):
         self.max_hp = self.hp = 35
         self.image = self.images.get_region(0, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
-        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(0, 32, 16, 16))
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(0, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -34,7 +34,7 @@ class Thief(LightWarrior):
         self.max_hp = self.hp = 30
         self.image = self.images.get_region(16, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
-        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(32, 32, 16, 16))
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(32, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -48,6 +48,7 @@ class BlackBelt(LightWarrior):
         self.max_hp = self.hp = 33
         self.image = self.images.get_region(32, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(64, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -61,6 +62,7 @@ class RedMage(LightWarrior):
         self.max_hp = self.hp = 30
         self.image = self.images.get_region(48, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(96, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -74,6 +76,7 @@ class WhiteMage(LightWarrior):
         self.max_hp = self.hp = 28
         self.image = self.images.get_region(64, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(128, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -87,6 +90,7 @@ class BlackMage(LightWarrior):
         self.max_hp = self.hp = 25
         self.image = self.images.get_region(80, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
+        self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(160, 0, 16, 16))
 
     def draw(self):
         self.sprite.draw()
@@ -97,6 +101,7 @@ class Engine:
     def __init__(self, window):
         self.window = window
         self.scenes = []
+        # TODO: push everything that defines a save into its own Game class
         self.respond_rate = 1
         self.heroes = [Fighter(), Thief(), BlackBelt(), RedMage()]
         self.gold = 400

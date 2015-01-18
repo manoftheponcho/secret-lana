@@ -1,3 +1,5 @@
+import SceneJobSelect
+
 __author__ = 'DUDE'
 
 import pyglet
@@ -6,6 +8,7 @@ from SceneIntro import SceneIntro
 from SceneNewGame import SceneNewGame
 from SceneJobSelect import SceneJobSelect
 from SceneMap import SceneMap
+
 
 class SceneMain:
     def __init__(self, engine):
