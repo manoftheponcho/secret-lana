@@ -1,12 +1,10 @@
-import SceneNameSelect
-
 __author__ = 'Bernadette'
 
 import pyglet
 from TextBox import TextBox
 from Engine import Fighter, Thief, BlackBelt, RedMage, WhiteMage, BlackMage
 from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B
-
+from SceneNameSelect import SceneNameSelect
 
 class SceneJobSelect:
 

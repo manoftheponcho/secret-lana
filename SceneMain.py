@@ -1,8 +1,7 @@
-import SceneJobSelect
-
 __author__ = 'DUDE'
 
 import pyglet
+
 from Engine import Engine, View
 from SceneIntro import SceneIntro
 from SceneNewGame import SceneNewGame
@@ -20,6 +19,7 @@ class SceneMain:
     def on_draw(self):
         if len(self.scene_order) > 0:
             self.engine.scenes.append(self.scene_order.pop(0)(self.engine))
+            self.engine.window.flip()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.ESCAPE:
