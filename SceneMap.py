@@ -5,7 +5,7 @@ from pyglet.gl import *
 from Config import RIGHT, UP, LEFT, DOWN, BUTTON_A, BUTTON_B, SELECT, START
 class SceneMap:
     FPS = 48
-
+    hero_sprites = pyglet.image.load('./resources/mapheroes.png')
     class Wall(pyglet.sprite.Sprite):
         def __init__(self, start_x, start_y, end_x, end_y):
             super().__init__(img=pyglet.image.create(end_x-start_x, end_y-start_y,
@@ -18,8 +18,6 @@ class SceneMap:
 
     def __init__(self, engine):
         self.engine = engine
-        pyglet.resource.path = ['resources']
-        pyglet.resource.reindex()
         self._x, self._y = (0, 0)
         self.moving = {LEFT: False, RIGHT: False, UP: False, DOWN: False}
         self.bg = pyglet.image.load('./resources/coneria.png')
@@ -54,7 +52,7 @@ class SceneMap:
         self.bg.blit(self.x, self.y)
         for object in self.objects:
             object.draw()
-        hero_sprite = pyglet.sprite.Sprite(pyglet.image.load('./resources/mapheroes.png').get_region(0,0,16,16))
+        hero_sprite = pyglet.sprite.Sprite(SceneMap.hero_sprites.get_region(0,0,16,16))
         hero_sprite.x, hero_sprite.y = (112, 123)
         hero_sprite.draw()
         return pyglet.event.EVENT_HANDLED
@@ -82,7 +80,7 @@ class SceneMap:
             pyglet.clock.schedule_interval_soft(self.finish_moving, 1/SceneMap.FPS)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        print('(x, y) = (({}, {})'.format(self.x, self.y))
+        print('(x, y) = ({}, {})'.format(self.x, self.y))
 
     def move(self, dt=1/16):
         if self.moving[LEFT]:

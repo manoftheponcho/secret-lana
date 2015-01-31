@@ -36,7 +36,7 @@ class SceneNewGame:
         return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
-        if (symbol in UP or symbol in DOWN):
+        if symbol in UP or symbol in DOWN:
             self.cursor.y = 135 if self.cursor.y == 95 else 95
         elif symbol in LEFT:
             self.engine.respond_rate = 8 if self.engine.respond_rate == 1 else self.engine.respond_rate - 1
