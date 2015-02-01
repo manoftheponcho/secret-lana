@@ -1,7 +1,7 @@
 __author__ = 'Bernadette'
 
-import pyglet
-
+import pyglet, sys
+from TextBox import BLUE
 
 class SceneIntro:
 
@@ -30,7 +30,8 @@ class SceneIntro:
 
     def __init__(self, engine):
         self.engine = engine
-        pyglet.gl.glClearColor(0, 0, 1, 1)
+        if not sys.platform.startswith('linux'):
+            pyglet.gl.glClearColor(0, 0, 1, 1)
         self.labels = [SceneIntro.FadeInLabel('The world is veiled in darkness.',
                                               x=128, anchor_x='center',
                                               y=216, anchor_y='top'),
@@ -69,6 +70,8 @@ class SceneIntro:
 
     def on_draw(self):
         pyglet.gl.glClear(0)
+        if sys.platform.startswith('linux'):
+            BLUE.create_image(256, 240).blit(0, 0)
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over

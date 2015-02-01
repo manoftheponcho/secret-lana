@@ -3,6 +3,35 @@ __author__ = 'Bernadette'
 import pyglet
 
 
+class Battler(object):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.status = set()
+        self._hp = 1
+
+    @property
+    def incapacitated(self):
+        if 'Dead' in self.status or 'Stone' in self.status:
+            return True
+        return False
+
+    @property
+    def unconscious(self):
+        if self.incapacitated or 'Stun' in self.status or 'Sleep' in self.status:
+            return True
+        return False
+
+    @property
+    def hp(self):
+        return self._hp
+    @hp.setter
+    def hp(self, other):
+        self._hp = other
+        self._hp = max(0, self._hp)
+        if self._hp == 0:
+            self.status.add('Dead')
+
 class LightWarrior:
     images = pyglet.image.load('./resources/heroes.png')
     map_sprites = pyglet.image.load('./resources/mapheroes.png')
@@ -10,7 +39,13 @@ class LightWarrior:
     def __init__(self):
         self.name = ''
         self.level = 1
+        self.status = set()
 
+    @property
+    def unconscious(self):
+        if 'DEAD' in self.status or 'STONE' in self.status or 'STUN' in self.status or 'SLEEP' in self.status:
+            return True
+        return False
 
 class Fighter(LightWarrior):
     job_name = 'FIGHTER'
