@@ -1,36 +1,8 @@
 __author__ = 'Bernadette'
 
 import pyglet
+import random
 
-
-class Battler(object):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        self.status = set()
-        self._hp = 1
-
-    @property
-    def incapacitated(self):
-        if 'Dead' in self.status or 'Stone' in self.status:
-            return True
-        return False
-
-    @property
-    def unconscious(self):
-        if self.incapacitated or 'Stun' in self.status or 'Sleep' in self.status:
-            return True
-        return False
-
-    @property
-    def hp(self):
-        return self._hp
-    @hp.setter
-    def hp(self, other):
-        self._hp = other
-        self._hp = max(0, self._hp)
-        if self._hp == 0:
-            self.status.add('Dead')
 
 class LightWarrior:
     images = pyglet.image.load('./resources/heroes.png')
@@ -40,12 +12,39 @@ class LightWarrior:
         self.name = ''
         self.level = 1
         self.status = set()
+        self.weapons = []
+        self.armor = []
 
     @property
-    def unconscious(self):
-        if 'DEAD' in self.status or 'STONE' in self.status or 'STUN' in self.status or 'SLEEP' in self.status:
+    def incapacitated(self):
+        if 'Dead' in self.status or 'Stone' in self.status:
             return True
         return False
+    @property
+    def unconscious(self):
+        if self.incapacitated or 'Stun' in self.status or 'Sleep' in self.status:
+            return True
+        return False
+
+    @property
+    def defense(self):
+        return sum([z.absorb for z in self.armor], 0)
+    @property
+    def evasion(self):
+        return 48 + self.agility - sum([z.weight for z in self.armor], 0)
+
+    def fight(self, target):
+        if self.incapacitated:
+            return
+        damage = 0
+        attack = sum([z.attack for z in self.weapons], int(self.strength / 2))
+        hit_chance = sum([z.accuracy for z in self.weapons], 168 + self.accuracy - target.evasion)
+        hits = int(1 + sum([z.accuracy for z in self.weapons], self.accuracy) / 32)
+        for i in range(hits):
+            if random.randint(0, 201) <= hit_chance:
+                hit_damage = random.randint(attack, 2 * attack + 1) - target.defense
+                damage += max(hit_damage, 1)
+        target.hp -= damage
 
 class Fighter(LightWarrior):
     job_name = 'FIGHTER'
@@ -53,6 +52,13 @@ class Fighter(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 35
+        self.strength = 20
+        self.agility = 5
+        self.intelligence = 1
+        self.vitality = 10
+        self.luck = 5
+        self.accuracy = 10
+        self.mdefense = 15
         self.image = self.images.get_region(0, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(0, 0, 16, 16))
@@ -67,6 +73,13 @@ class Thief(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 30
+        self.strength = 5
+        self.agility = 10
+        self.intelligence = 5
+        self.vitality = 5
+        self.luck = 15
+        self.accuracy = 5
+        self.mdefense = 15
         self.image = self.images.get_region(16, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(32, 0, 16, 16))
@@ -81,6 +94,13 @@ class BlackBelt(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 33
+        self.strength = 5
+        self.agility = 5
+        self.intelligence = 5
+        self.vitality = 20
+        self.luck = 5
+        self.accuracy = 5
+        self.mdefense = 10
         self.image = self.images.get_region(32, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(64, 0, 16, 16))
@@ -95,6 +115,13 @@ class RedMage(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 30
+        self.strength = 10
+        self.agility = 10
+        self.intelligence = 10
+        self.vitality = 5
+        self.luck = 5
+        self.accuracy = 7
+        self.mdefense = 20
         self.image = self.images.get_region(48, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(96, 0, 16, 16))
@@ -109,6 +136,13 @@ class WhiteMage(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 28
+        self.strength = 5
+        self.agility = 5
+        self.intelligence = 15
+        self.vitality = 10
+        self.luck = 5
+        self.accuracy = 5
+        self.mdefense = 20
         self.image = self.images.get_region(64, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(128, 0, 16, 16))
@@ -123,6 +157,13 @@ class BlackMage(LightWarrior):
     def __init__(self):
         super().__init__()
         self.max_hp = self.hp = 25
+        self.strength = 1
+        self.agility = 10
+        self.intelligence = 20
+        self.vitality = 1
+        self.luck = 10
+        self.accuracy = 5
+        self.mdefense = 20
         self.image = self.images.get_region(80, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(160, 0, 16, 16))
