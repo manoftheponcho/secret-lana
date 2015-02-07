@@ -60,8 +60,8 @@ class Enemy(Battler):
         self.gold = 0
         self.exp = 0
 
-    def AI_choice(self, scene):
-        if [z for z in scene.party if not z.unconscious] == []:
+    def ai_choice(self, scene):
+        if not [z for z in scene.party if not z.unconscious]:
             return
         if (self.morale - 2 * scene.party[0].level + random.randint(0, 50)) < 80:
             scene.enemies.remove(self)
@@ -117,7 +117,7 @@ class SceneBattle:
 
     class Cursor:
         sprite = pyglet.sprite.Sprite(pyglet.image.load('./resources/cursor.png'))
-        def __init__(self, matrix, pos = (0, 0)):
+        def __init__(self, matrix, pos=(0, 0)):
             self.matrix = matrix
             self.width = max([key[0] for key in self.matrix.keys()]) + 1
             self.height = max([key[1] for key in self.matrix.keys()]) + 1
@@ -167,8 +167,7 @@ class SceneBattle:
         self.layer_3 = pyglet.graphics.OrderedGroup(2)
         self.layer_4 = pyglet.graphics.OrderedGroup(3)
         self.text = pyglet.graphics.OrderedGroup(4)
-        # TODO:  make a Formation class responsible for updating target cursor matrices
-        self.enemy_matrix = {(0, 0): formation[0], (0, 1): formation[1], (0, 2): formation[2]}
+
         self.enemies[0].sprite.x, self.enemies[0].sprite.y = 16, 168
         self.enemies[1].sprite.x, self.enemies[1].sprite.y = 16, 136
         self.enemies[2].sprite.x, self.enemies[2].sprite.y = 16, 104
@@ -224,8 +223,8 @@ class SceneBattle:
 
     def action_setup(self):
         self.party[len(self.party_actions)].sprite.x = 160
-        self.engine.push_handlers(on_draw=self.action_draw,
-                                  on_key_press=self.action_key_press)
+        self.engine.set_handlers(on_draw=self.action_draw,
+                                 on_key_press=self.action_key_press)
         self.cursor = SceneBattle.Cursor({(0, 0): (96, 64), (1, 0): (144, 64),
                                           (0, 1): (96, 48), (1, 1): (144, 64),
                                           (0, 2): (96, 32), (1, 2): (144, 64),
@@ -272,11 +271,12 @@ class SceneBattle:
             return pyglet.event.EVENT_HANDLED
 
     def target_setup(self):
-        self.engine.push_handlers(on_draw=self.target_draw,
-                                  on_key_press=self.target_key_press)
-        self.cursor = SceneBattle.Cursor({(0, 0): (0, 184),
-                                          (0, 1): (0, 152),
-                                          (0, 2): (0, 120)})
+        self.engine.set_handlers(on_draw=self.target_draw,
+                                 on_key_press=self.target_key_press)
+        cursor_keys = [(0, i) for i in range(len(self.enemies))]
+        cursor_values = [(enemy.sprite.x-16, enemy.sprite.y+16) for enemy in self.enemies]
+        cursor_matrix = dict(list(zip(cursor_keys, cursor_values)))
+        self.cursor = SceneBattle.Cursor(cursor_matrix)
 
     def target_draw(self):
         self.engine.window.clear()
@@ -326,18 +326,31 @@ class SceneBattle:
 
     def round_setup(self):
         party_moves = list(zip(self.party_actions, self.party_targets))
-        enemy_moves = [enemy.AI_choice(self) for enemy in self.enemies]
+        enemy_moves = [enemy.ai_choice(self) for enemy in self.enemies]
         moves = party_moves + enemy_moves
-        print('moves={}'.format(moves))
         random.shuffle(moves)
         for move in moves:
             if not move[1].incapacitated:
                 move[0](move[1])
+                if self.check_win():
+                    return
         self.party_actions = []
         self.party_targets = []
         self.enemies = list(filter(lambda x: x.incapacitated == False, self.enemies))
         self.action_setup()
 
+    def check_win(self):
+        if not [enemy for enemy in self.enemies if not enemy.incapacitated]:
+            print('You won!')
+            self.engine.scenes.pop()
+            self.engine.pop_handlers()
+            return True
+        elif not [hero for hero in self.party if not hero.incapacitated]:
+            print('You lost!')
+            self.engine.scenes.pop()
+            self.engine.pop_handlers()
+            return True
+        return False
 if __name__ == "__main__":
     view = View()
     engine = Engine(view)

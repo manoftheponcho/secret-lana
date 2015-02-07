@@ -184,9 +184,10 @@ class Engine:
 
     def push_handlers(self, *args, **kwargs):
         self.window.push_handlers(*args, **kwargs)
-
     def pop_handlers(self):
         self.window.pop_handlers()
+    def set_handlers(self, *args, **kwargs):
+        self.window.set_handlers(*args, **kwargs)
 
 
 class View(pyglet.window.Window):

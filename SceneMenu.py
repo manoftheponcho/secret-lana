@@ -22,12 +22,12 @@ class SceneMenu:
         self.engine.heroes[2].sprite.x, self.engine.heroes[2].sprite.y = (136,  79)
         self.engine.heroes[3].sprite.x, self.engine.heroes[3].sprite.y = (216,  79)
         self.objects = [TextBox( 64, 64, 16,160, batch=self.fixed, group=self.bg),
-                          TextBox( 80, 40,  8,120, batch=self.fixed, group=self.bg),
-                          TextBox( 64,112, 16,  8, batch=self.fixed, group=self.bg),
-                          TextBox( 80,112, 88,  8, batch=self.fixed, group=self.bg),
-                          TextBox( 80,112, 88,120, batch=self.fixed, group=self.bg),
-                          TextBox( 80,112,168,  8, batch=self.fixed, group=self.bg),
-                          TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
+                        TextBox( 80, 40,  8,120, batch=self.fixed, group=self.bg),
+                        TextBox( 64,112, 16,  8, batch=self.fixed, group=self.bg),
+                        TextBox( 80,112, 88,  8, batch=self.fixed, group=self.bg),
+                        TextBox( 80,112, 88,120, batch=self.fixed, group=self.bg),
+                        TextBox( 80,112,168,  8, batch=self.fixed, group=self.bg),
+                        TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
         HP_FORMAT = '{:3}/{:3}'
         GOLD_FORMAT = '{:6} G'
         LEVEL_FORMAT = 'L{:2}'
