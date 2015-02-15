@@ -64,6 +64,13 @@ class SceneFifteen:
         self.show_selected = True
         self.puzzle_image = pyglet.image.load('./resources/fifteen.png')
         self.puzzle_bg = pyglet.image.load('./resources/fifteenbg.png')
+        self.music_player = pyglet.media.Player()
+        self.puzzle_music = pyglet.media.load('./resources/prologue.wav')
+        self.music_group = pyglet.media.SourceGroup(self.puzzle_music.audio_format, None)
+        self.music_group.queue(self.puzzle_music)
+        self.music_group.loop = True
+        self.music_player.queue(self.music_group)
+        self.music_player.play()
         pyglet.clock.schedule_interval(self.flicker, 1/24)
         self.engine.push_handlers(on_draw=self.on_draw,
                                   on_key_press=self.on_key_press)
