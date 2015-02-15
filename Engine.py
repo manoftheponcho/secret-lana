@@ -7,13 +7,25 @@ import random
 class LightWarrior:
     images = pyglet.image.load('./resources/heroes.png')
     map_sprites = pyglet.image.load('./resources/mapheroes.png')
+    exp_levels = [      0,     40,    196,    547,   1171,   2146,   3550,   5461,   7957,  11116,
+                    15016,  19735,  25351,  31942,  39586,  48361,  58345,  69617,  82253,  96332,
+                   111932, 129131, 148008, 168639, 191103, 215479, 241843, 270275, 300851, 333651,
+                   366450, 399250, 432049, 464849, 497648, 530448, 563247, 596047, 628846, 661646,
+                   694445, 727245, 760044, 792844, 825643, 858443, 891242, 924042, 956841, 989641]
 
     def __init__(self):
         self.name = ''
+        self._hp = 1
         self.level = 1
+        self.strength = 1
+        self.agility = 1
+        self.intelligence = 1
+        self.vitality = 1
+        self.luck = 1
         self.status = set()
         self.weapons = []
         self.armor = []
+        self.exp = 0
 
     @property
     def incapacitated(self):
@@ -32,6 +44,18 @@ class LightWarrior:
     @property
     def evasion(self):
         return 48 + self.agility - sum([z.weight for z in self.armor], 0)
+    @property
+    def attack(self):
+        return sum([z.attack for z in self.weapons], int(self.strength / 2))
+    @property
+    def hp(self):
+        return self._hp
+    @hp.setter
+    def hp(self, value):
+        self._hp = value
+        self._hp = max(0, self._hp)
+        if self._hp == 0:
+            self.status.add('Dead')
 
     def fight(self, target):
         if self.incapacitated:
@@ -104,6 +128,17 @@ class BlackBelt(LightWarrior):
         self.image = self.images.get_region(32, 0, 16, 24)
         self.sprite = pyglet.sprite.Sprite(self.image)
         self.map_sprite = pyglet.sprite.Sprite(self.map_sprites.get_region(64, 0, 16, 16))
+
+    @property
+    def attack(self):
+        if not self.weapons:
+            return self.level * 2
+        return sum([z.attack for z in self.weapons], int(self.strength / 2) + 1)
+    @property
+    def defense(self):
+        if not self.armor:
+            return self.level
+        return sum([z.defense for z in self.armor], 0)
 
     def draw(self):
         self.sprite.draw()
