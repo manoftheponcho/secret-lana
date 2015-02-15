@@ -65,6 +65,8 @@ class SceneFifteen:
         self.puzzle_image = pyglet.image.load('./resources/fifteen.png')
         self.puzzle_bg = pyglet.image.load('./resources/fifteenbg.png')
         self.music_player = pyglet.media.Player()
+        self.oops = pyglet.media.load('./resources/oops.wav', streaming=False)
+        self.woohoo = pyglet.media.load('./resources/woohoo.wav')
         self.puzzle_music = pyglet.media.load('./resources/prologue.wav')
         self.music_group = pyglet.media.SourceGroup(self.puzzle_music.audio_format, None)
         self.music_group.queue(self.puzzle_music)
@@ -143,9 +145,12 @@ class SceneFifteen:
                     rotated_column = self.puzzle.state[blank_index + 4:self.selected_index + 4:4] + [16]
                     self.puzzle.state[blank_index:self.selected_index + 1:4] = rotated_column
             else:
+                self.oops.play()
                 return
             self.selected_index = blank_index
         if self.puzzle.state == self.puzzle.solved:
+            self.music_player.pause()
+            self.woohoo.play()
             pyglet.clock.schedule_interval(self.glow, 1/8)
             self.engine.set_handlers(on_draw=self.win_draw,
                                      on_key_press=self.win_key_press)
