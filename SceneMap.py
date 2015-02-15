@@ -2,7 +2,10 @@ __author__ = 'DUDE'
 
 import pyglet
 from pyglet.gl import *
+from SceneMenu import SceneMenu
 from Config import RIGHT, UP, LEFT, DOWN, BUTTON_A, BUTTON_B, SELECT, START
+
+
 class SceneMap:
     FPS = 48
     hero_sprites = pyglet.image.load('./resources/mapheroes.png')
@@ -66,7 +69,8 @@ class SceneMap:
         if direction in self.moving and not already_moving:
             self.moving[direction] = True
             pyglet.clock.schedule_interval_soft(self.move, 1/SceneMap.FPS)
-
+        if symbol in START:
+            self.engine.scenes.append(SceneMenu(self.engine))
         if symbol != pyglet.window.key.ESCAPE:
             return pyglet.event.EVENT_HANDLED
 
