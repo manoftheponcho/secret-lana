@@ -1,7 +1,8 @@
 __author__ = 'DUDE'
 
+import sys, functools
 import pyglet
-from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B, SELECT, START
+from Config import UP, DOWN, LEFT, RIGHT, BUTTON_A, BUTTON_B
 from TextBox import TextBox
 from SceneItem import SceneItem
 from SceneMagic import SceneMagic
@@ -15,19 +16,25 @@ class SceneMenu:
         self.fixed = pyglet.graphics.Batch()
         self.bg = pyglet.graphics.OrderedGroup(0)
         self.text = pyglet.graphics.OrderedGroup(1)
+        if sys.platform.startswith('linux'):
+            pyglet.options['audio'] = ('openal', 'pulse', 'silent')
+        self.menu_music = pyglet.media.load('./resources/menu.wav')
+        self.move_sound = pyglet.media.load('./resources/move.wav', streaming=False)
+        self.select_sound = pyglet.media.load('./resources/select.wav', streaming=False)
+        self.engine.play_music(self.menu_music)
         cursor_image = pyglet.image.load('./resources/cursor.png')
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=16, y=79)
         self.engine.heroes[0].sprite.x, self.engine.heroes[0].sprite.y = (136, 191)
         self.engine.heroes[1].sprite.x, self.engine.heroes[1].sprite.y = (216, 191)
         self.engine.heroes[2].sprite.x, self.engine.heroes[2].sprite.y = (136,  79)
         self.engine.heroes[3].sprite.x, self.engine.heroes[3].sprite.y = (216,  79)
-        self.objects = [TextBox( 64, 64, 16,160, batch=self.fixed, group=self.bg),
-                        TextBox( 80, 40,  8,120, batch=self.fixed, group=self.bg),
-                        TextBox( 64,112, 16,  8, batch=self.fixed, group=self.bg),
-                        TextBox( 80,112, 88,  8, batch=self.fixed, group=self.bg),
-                        TextBox( 80,112, 88,120, batch=self.fixed, group=self.bg),
-                        TextBox( 80,112,168,  8, batch=self.fixed, group=self.bg),
-                        TextBox( 80,112,168,120, batch=self.fixed, group=self.bg)]
+        self.objects = [TextBox(64, 64, 16,160, batch=self.fixed, group=self.bg),
+                        TextBox(80, 40,  8,120, batch=self.fixed, group=self.bg),
+                        TextBox(64,112, 16,  8, batch=self.fixed, group=self.bg),
+                        TextBox(80,112, 88,  8, batch=self.fixed, group=self.bg),
+                        TextBox(80,112, 88,120, batch=self.fixed, group=self.bg),
+                        TextBox(80,112,168,  8, batch=self.fixed, group=self.bg),
+                        TextBox(80,112,168,120, batch=self.fixed, group=self.bg)]
         HP_FORMAT = '{:3}/{:3}'
         GOLD_FORMAT = '{:6} G'
         LEVEL_FORMAT = 'L{:2}'
@@ -79,61 +86,43 @@ class SceneMenu:
 
     def menu_select(self, symbol, modifiers):
         if symbol in UP:
+            self.move_sound.play()
             self.cursor.y = 15 if self.cursor.y == 79 else self.cursor.y + 16
         elif symbol in DOWN:
+            self.move_sound.play()
             self.cursor.y = 79 if self.cursor.y == 15 else self.cursor.y - 16
         elif symbol in BUTTON_A:
-            if self.cursor.y == 79:#ITEM
+            self.select_sound.play()
+            if self.cursor.y == 79:  # ITEM
                 self.engine.scenes.append(SceneItem(self.engine))
-            elif self.cursor.y == 63:#MAGIC
+            elif self.cursor.y == 63:  # MAGIC
                 self.cursor.x, self.cursor.y = (72, 209)
-                self.engine.push_handlers(on_key_press=self.magic_select)
-            elif self.cursor.y == 47:#WEAPON
+                self.engine.push_handlers(on_key_press=functools.partial(self.char_select, new_scene=SceneMagic))
+            elif self.cursor.y == 47:  # WEAPON
                 self.engine.scenes.append(SceneWeapon(self.engine))
-            elif self.cursor.y == 31:#ARMOR
+            elif self.cursor.y == 31:  # ARMOR
                 self.engine.scenes.append(SceneArmor(self.engine))
-            elif self.cursor.y == 15:#STATUS
+            elif self.cursor.y == 15:  # STATUS
                 self.cursor.x, self.cursor.y = (72, 209)
-                self.engine.push_handlers(on_key_press=self.status_select)
+                self.engine.push_handlers(on_key_press=functools.partial(self.char_select, new_scene=SceneStatus))
         elif symbol in BUTTON_B:
             self.engine.pop_handlers()
         if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
             return pyglet.event.EVENT_HANDLED
 
-    def magic_select(self, symbol, modifiers):
+    def char_select(self, symbol, modifiers, new_scene):
         if symbol in UP + DOWN:
-            #if it's one, make it the other
-            self.cursor.y = {95:209, 209:95}[self.cursor.y]
+            self.cursor.y = {95: 209, 209: 95}[self.cursor.y]
         elif symbol in LEFT + RIGHT:
-            #same idea
-            self.cursor.x = {72:152, 152:72}[self.cursor.x]
+            self.cursor.x = {72: 152, 152: 72}[self.cursor.x]
         elif symbol in BUTTON_A:
-            #map cursor location to hero array index
             index = {(72,209):0, (152,209):1, (72,95):2, (152,95):3}[(self.cursor.x, self.cursor.y)]
-            self.engine.scenes.append(SceneMagic(self.engine, index))
+            self.engine.scenes.append(new_scene(self.engine, index))
         elif symbol in BUTTON_B:
             self.cursor.x, self.cursor.y = (16,63)
             self.engine.pop_handlers()
         if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
             return pyglet.event.EVENT_HANDLED
-
-    def status_select(self, symbol, modifiers):
-        if symbol in UP + DOWN:
-            #if it's one, make it the other
-            self.cursor.y = {95:209, 209:95}[self.cursor.y]
-        elif symbol in LEFT + RIGHT:
-            #same idea
-            self.cursor.x = {72:152, 152:72}[self.cursor.x]
-        elif symbol in BUTTON_A:
-            #map cursor location to hero array index
-            index = {(72,209):0, (152,209):1, (72,95):2, (152,95):3}[(self.cursor.x, self.cursor.y)]
-            self.engine.scenes.append(SceneStatus(self.engine, index))
-        elif symbol in BUTTON_B:
-            self.cursor.x, self.cursor.y = (16,15)
-            self.engine.pop_handlers()
-        if symbol != pyglet.window.key.ESCAPE:  # the only keyboard event we want propagating up the stack
-            return pyglet.event.EVENT_HANDLED
-
 
 if __name__ == "__main__":
     from Engine import Engine, View, Fighter, Thief, BlackBelt, RedMage

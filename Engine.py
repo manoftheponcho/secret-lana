@@ -22,6 +22,8 @@ class LightWarrior:
         self.intelligence = 1
         self.vitality = 1
         self.luck = 1
+        self.accuracy = 1
+        self.mdefense = 1
         self.status = set()
         self.weapons = []
         self.armor = []
@@ -212,6 +214,7 @@ class Engine:
     def __init__(self, window):
         self.window = window
         self.scenes = []
+        self.player = pyglet.media.Player()
         # TODO: push everything that defines a save into its own Game class
         self.respond_rate = 1
         self.heroes = [Fighter(), Thief(), BlackBelt(), RedMage()]
@@ -224,6 +227,18 @@ class Engine:
     def set_handlers(self, *args, **kwargs):
         self.window.set_handlers(*args, **kwargs)
 
+    def play_music(self, source):
+        try:
+            self.player.pause()
+            self.music.queue(source)
+            self.music.next_source(immediate=True)
+            self.player.play()
+        except AttributeError:
+            self.music = pyglet.media.SourceGroup(source.audio_format, None)
+            self.music.loop = True
+            self.music.queue(source)
+            self.player.queue(self.music)
+            self.player.play()
 
 class View(pyglet.window.Window):
     def __init__(self):

@@ -126,10 +126,10 @@ class MadPony(Enemy):
         self.morale = 106
         self.gold = 15
         self.exp = 63
-        self.sprite = pyglet.sprite.Sprite(Enemy.images.get_region(32, 0, 48, 48))
+        self.sprite = pyglet.sprite.Sprite(Enemy.images.get_region(240, 432, 48, 48))
 
 class Formation:
-    size = {(32, 32): 'S', (48, 48): 'M', (48, 64): 'L', (112, 96): 'XL'}
+    size = {(32, 32): 'S', (48, 48): 'M', (64, 64): 'L', (112, 96): 'XL'}
     def __init__(self, *args):
         self.enemies = []
         sizes = [Formation.size[arg.sprite.width, arg.sprite.height] for arg in args]
