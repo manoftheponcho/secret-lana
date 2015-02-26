@@ -10,6 +10,8 @@ class SceneNewGame:
         self.engine = engine
         cursor_image = pyglet.image.load('./resources/cursor.png')
         pyglet.gl.glClearColor(0,0,0,1)
+        self.move_sound = pyglet.media.load('./resources/move.wav', streaming=False)
+        self.select_sound = pyglet.media.load('./resources/select.wav', streaming=False)
         self.cursor = pyglet.sprite.Sprite(cursor_image, x=72, y=135)
         self.textboxes = [TextBox(80, 32, 88, 128),
                           TextBox(80, 32, 88, 88),
@@ -32,15 +34,18 @@ class SceneNewGame:
             label.draw()
         self.cursor.draw()
         rr = self.engine.respond_rate
-        pyglet.text.Label('{}'.format(rr), x=176, y=56).draw()
+        pyglet.text.Label('{}'.format(rr), x=176, y=56, font_size=8).draw()
         return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
 
     def on_key_press(self, symbol, modifiers):
         if symbol in UP or symbol in DOWN:
+            self.select_sound.play()
             self.cursor.y = 135 if self.cursor.y == 95 else 95
         elif symbol in LEFT:
+            self.move_sound.play()
             self.engine.respond_rate = 8 if self.engine.respond_rate == 1 else self.engine.respond_rate - 1
         elif symbol in RIGHT:
+            self.move_sound.play()
             self.engine.respond_rate = 1 if self.engine.respond_rate == 8 else self.engine.respond_rate + 1
         elif symbol in BUTTON_A:
             self.engine.scenes.pop()

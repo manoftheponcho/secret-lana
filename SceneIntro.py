@@ -32,7 +32,6 @@ class SceneIntro:
         self.engine = engine
         if not sys.platform.startswith('linux'):
             pyglet.gl.glClearColor(0, 0, 1, 1)
-        self.music_player = pyglet.media.Player()
         self.intro_music = pyglet.media.load('./resources/prelude.wav')
         self.engine.play_music(self.intro_music)
         self.labels = [SceneIntro.FadeInLabel('The world is veiled in darkness.',
