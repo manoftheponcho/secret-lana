@@ -9,6 +9,7 @@ from Config import RIGHT, UP, LEFT, DOWN, BUTTON_A, BUTTON_B, SELECT, START
 class SceneMap:
     FPS = 48
     hero_sprites = pyglet.image.load('./resources/mapheroes.png')
+
     class Wall(pyglet.sprite.Sprite):
         def __init__(self, start_x, start_y, end_x, end_y):
             super().__init__(img=pyglet.image.create(end_x-start_x, end_y-start_y,

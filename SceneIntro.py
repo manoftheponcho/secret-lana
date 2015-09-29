@@ -1,7 +1,8 @@
-__author__ = 'Bernadette'
-
 import pyglet, sys
 from TextBox import BLUE
+
+__author__ = 'Bernadette'
+
 
 class SceneIntro:
 
@@ -16,9 +17,9 @@ class SceneIntro:
             super().__init__(text, font_name, font_size, bold, italic, color,
                              x, y, width, height, anchor_x, anchor_y, halign,
                              multiline, dpi, batch, group)
-            #everything starts out invisible
+            # everything starts out invisible
             self.scale_alpha(0, 0)
-            #then fades in over the course of a second after (delay) seconds
+            # then fades in over the course of a second after (delay) seconds
             pyglet.clock.schedule_once(self.scale_alpha, delay + .25, scale=.25)
             pyglet.clock.schedule_once(self.scale_alpha, delay + .5, scale=.5)
             pyglet.clock.schedule_once(self.scale_alpha, delay + .75, scale=.75)
@@ -30,8 +31,8 @@ class SceneIntro:
 
     def __init__(self, engine):
         self.engine = engine
-        if not sys.platform.startswith('linux'):
-            pyglet.gl.glClearColor(0, 0, 1, 1)
+#        if not sys.platform.startswith('linux'):
+#            pyglet.gl.glClearColor(0, 0, 1, 1)
         self.intro_music = pyglet.media.load('./resources/prelude.wav')
         self.engine.play_music(self.intro_music)
         self.labels = [SceneIntro.FadeInLabel('The world is veiled in darkness.',
@@ -72,8 +73,8 @@ class SceneIntro:
 
     def on_draw(self):
         pyglet.gl.glClear(0)
-        if sys.platform.startswith('linux'):
-            BLUE.create_image(256, 240).blit(0, 0)
+#        if sys.platform.startswith('linux'):
+        BLUE.create_image(256, 240).blit(0, 0)
         for label in self.labels:
             label.draw()
         return pyglet.event.EVENT_HANDLED # so the default (blank) drawing doesn't take over
@@ -90,3 +91,4 @@ if __name__ == "__main__":
     engine = Engine(view)
     engine.scenes.append(SceneIntro(engine))
     pyglet.app.run()
+    print(pyglet.gl.gl.GL_COLOR_CLEAR_VALUE)
